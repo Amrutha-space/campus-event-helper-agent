@@ -1,0 +1,127 @@
+
+{
+  "tools": [
+    {
+      "name": "search_campus_events",
+      "description": "Search campus events by date and topic. Use this tool when a student wants to discover events. It only reads event information and does not register students.",
+      "risk": "low",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "Event date in YYYY-MM-DD format."
+          },
+          "topic": {
+            "type": "string",
+            "description": "Event topic, such as AI, web development, or hackathon."
+          },
+          "max_results": {
+            "type": "integer",
+            "description": "Maximum results to return, between 1 and 10."
+          }
+        },
+        "required": ["date", "topic", "max_results"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "description": "Matching events with event ID, name, date, time, and venue."
+          },
+          "error": {
+            "type": "string",
+            "description": "Empty when successful, otherwise an error message."
+          }
+        }
+      },
+      "example_call": {
+        "date": "2026-11-10",
+        "topic": "AI",
+        "max_results": 5
+      }
+    },
+    {
+      "name": "summarize_event_page",
+      "description": "Retrieve and summarize the information from one public campus event page. Use this when a student wants details about a specific event.",
+      "risk": "low",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "event_url": {
+            "type": "string",
+            "description": "HTTP or HTTPS URL of the public event page."
+          }
+        },
+        "required": ["event_url"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "Short event summary."
+          },
+          "event_name": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string",
+            "description": "Empty when successful, otherwise an error message."
+          }
+        }
+      },
+      "example_call": {
+        "event_url": "https://example.com/campus-ai-event"
+      }
+    },
+    {
+      "name": "save_event_shortlist",
+      "description": "Save a student's selected campus events to their shortlist. This modifies stored user data and should only be called after the student confirms the selection.",
+      "risk": "medium",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "student_id": {
+            "type": "string",
+            "description": "Unique student identifier."
+          },
+          "event_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of selected event IDs. Must contain between 1 and 10 IDs."
+          }
+        },
+        "required": ["student_id", "event_ids"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "saved_event_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "error": {
+            "type": "string",
+            "description": "Empty when successful, otherwise an error message."
+          }
+        }
+      },
+      "example_call": {
+        "student_id": "STU001",
+        "event_ids": ["EVT001", "EVT002"]
+      }
+    }
+  ]
+}
